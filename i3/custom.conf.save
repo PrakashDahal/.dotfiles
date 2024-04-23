@@ -1,0 +1,80 @@
+focus_follows_mouse no
+
+# Show vol icon on statup
+exec --no-startup-id volctl &
+# I3lock with #color 282A2E
+bindsym $mod+slash exec --no-startup-id i3lock -c 282A2E
+
+bindsym $mod+F11 exec --no-startup-id "brillo -q -U 5"
+bindsym $mod+F12 exec --no-startup-id "brillo -q -A 5"
+
+# Custom gaps and border
+gaps inner 2
+default_border pixel 0
+
+# Color theme
+# class                 border    backgr.  text     indicator  child_border
+client.focused          #282A2E   #1e3a2b  #ffffff  #2e9ef4    #1e3a2b
+client.focused_inactive #333333   #282A2E  #ffffff  #484e50    #282A2E
+client.unfocused        #333333   #222222  #888888  #292d2e    #222222
+client.urgent           #2f343a   #282A2E  #ffffff  #282A2E    #282A2E
+client.placeholder      #000000   #0c0c0c  #ffffff  #000000    #0c0c0c
+
+client.background       #e0f0e0
+
+
+# The default application will open in specified workspace
+
+# Workspace Management
+# assign [class="Alacritty"] $ws1  
+assign [class="Brave-browser"] $ws2 
+assign [class="code"] $ws10
+assign [class="TelegramDesktop"] $ws9
+assign [class="^Microsoft Teams"] $ws9
+
+# Open default application required
+exec --no-startup-id alacritty & 
+exec --no-startup-id brave &
+exec --no-startup-id telegram-desktop &
+exec --no-startup-id "microsoft teams - preview" &
+exec --no-startup-id code &
+
+exec --no-startup-id "conky -c ~/.config/conky/conky.lua" &
+
+
+# Custom bindings
+
+# Press $mod+b to start browser bindings. Then press b for brave, f for firefox and e for edge
+# Press ESC or return to exit binding mode and go to default mode.
+set $mode_browser => Launch: [f]irefox [b]rave [e]microsoft-edge-stable
+bindsym $mod+b mode "$mode_browser"
+
+mode "$mode_browser" {
+    bindsym f exec firefox
+    bindsym b exec brave
+    bindsym e exec microsoft-edge-stable
+
+    bindsym Escape mode "default"
+    bindsym Return mode "default"
+}
+
+# Kill all applications on
+bindsym $mod+shift+q [class="^(?i)(?!alacritty).*"] kill
+
+# Power management
+bindsym $mod+p mode "$mode_system"
+set $mode_system (s)uspend, (e)xit, (r)eboot, (Shift+s)hutdown
+qmode "$mode_system" {
+    bindsym s exec --no-startup-id "i3lock -c 282A2E && systemctl suspend"
+    bindsym e exec --no-startup-id "i3-msg exit"
+    bindsym r exec --no-startup-id "systemctl reboot"
+    bindsym Shift+s exec --no-startup-id "systemctl poweroff"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# (restore will remember old selected image and restores it) 
+# Set background using nitrogen 
+exec_always --no-startup-id ~/Documents/bashScripts/customBashFiles/random_wallpaper_nitrogen.sh &
+# exec_always --no-startup-id ~/Documents/bashScripts/customBashFiles/battry_alert.sh
+exec_always ~/.config/polybar/launch.sh &
