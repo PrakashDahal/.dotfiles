@@ -6,9 +6,14 @@ This includes all the required dot files for my config
 
 ## How to use this config
 1. Clone the repo in your machine (eg; Documents)
-2. sym link your required configurations
-    Eg; 
-    > ```ln -s ~/Documents/dotfiles/nvim ~/.config```
-    > ```ln -s ~/Documents/dotfiles/.zshrc ~/.zshrc```
+2. Sym link your required configurations. 
+    
+    _Eg;_
+
+    ```ln -s ~/Documents/dotfiles/nvim ~/.config```
+
+    ```ln -s ~/Documents/dotfiles/.zshrc ~/.zshrc```
+
+    ```ln -s ~/Documents/dotfiles/i3 ~/.config```
 
 
