@@ -16,4 +16,3 @@ This includes all the required dot files for my config
 
     ```ln -s ~/Documents/dotfiles/i3 ~/.config```
 
-
