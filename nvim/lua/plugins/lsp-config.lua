@@ -10,7 +10,7 @@ return {
     config = function()
       require("mason-lspconfig").setup({
         auto_install = true,
-        -- ensure_installed = { "lua_ls", "tsserver" },
+        ensure_installed = { "clangd", "eslint", "lua_ls", "tsserver", "html", "jsonls", "gopls" },
       })
     end,
   },
@@ -28,6 +28,15 @@ return {
       lspconfig.html.setup({
         capabilities = capabilities,
       })
+      lspconfig.jsonls.setup({
+        capabilities = capabilities,
+      })
+      lspconfig.clangd.setup({
+        capabilities = capabilities,
+      })
+      lspconfig.gopls.setup({
+        capabilities = capabilities,
+      })
       vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
       vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
       vim.keymap.set("n", "gr", vim.lsp.buf.references, {})
@@ -35,3 +44,4 @@ return {
     end,
   },
 }
+
