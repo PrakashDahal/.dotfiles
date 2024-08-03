@@ -1,4 +1,4 @@
-return  {
+return {
   "nvim-neo-tree/neo-tree.nvim",
   branch = "v3.x",
   dependencies = {
@@ -7,7 +7,7 @@ return  {
     "MunifTanjim/nui.nvim",
   },
   config = function()
-    vim.keymap.set('n', '<C-b>', ':Neotree filesystem reveal left<CR>', {})
-  end
+    vim.keymap.set("n", "<leader>ee", ":Neotree filesystem toggle left<CR>", { desc = "Toggle file explorer" })
+    vim.keymap.set("n", "<leader>ef", ":Neotree reveal<CR>", { desc = "Open current file explorer" }) -- toggle file explorer on current file
+  end,
 }
-
