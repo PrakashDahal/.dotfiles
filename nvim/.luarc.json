@@ -3,6 +3,7 @@
         "vim"
     ],
     "diagnostics.disable": [
-        "assign-type-mismatch"
+        "assign-type-mismatch",
+        "missing-fields"
     ]
 }

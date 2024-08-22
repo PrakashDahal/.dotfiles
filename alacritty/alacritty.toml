@@ -1,5 +1,5 @@
 [font]
-size = 8
+size = 10
 
 [font.bold]
 family = "monospace"
@@ -18,7 +18,7 @@ family = "monospace"
 style = "Regular"
 
 [window]
-opacity=0.88
+opacity=0.90
 
 [terminal]
 osc52 = "CopyPaste"
