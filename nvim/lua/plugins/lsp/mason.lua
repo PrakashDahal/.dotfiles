@@ -26,7 +26,7 @@ return {
 		mason_lspconfig.setup({
 			-- list of servers for mason to install
 			ensure_installed = {
-				"tsserver",
+				"ts_ls",
 				"html",
 				"cssls",
 				"tailwindcss",
@@ -35,6 +35,12 @@ return {
 				"emmet_ls",
 				"prismals",
 				"pyright",
+				"marksman", -- Markdown language server
+				"gopls", -- Go language server
+				"jsonls", -- JSON language server
+				"yamlls", -- YAML language server
+				-- 	"playwright", -- Playwright language server
+				-- 	"cypress", -- Cypress language server
 			},
 		})
 

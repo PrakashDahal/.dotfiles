@@ -9,6 +9,12 @@ return {
 			vim.keymap.set("n", "<C-p>", builtin.git_files, { desc = "Find added git files" }) -- note: this is dublicated with fg. But I want to keep it this way. You can remove
 			vim.keymap.set("n", "<leader>fg", builtin.git_files, { desc = "Find added git files" })
 			vim.keymap.set("n", "<leader>fs", builtin.live_grep, { desc = "Search in all files" })
+			vim.api.nvim_set_keymap(
+				"n",
+				"<leader>p",
+				":Telescope neovim-project discover<CR>",
+				{ noremap = true, silent = true }
+			)
 		end,
 	},
 	{

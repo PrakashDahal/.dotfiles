@@ -12,7 +12,7 @@ return {}
 --     config = function()
 --       require("mason-lspconfig").setup({
 --         auto_install = true,
---         ensure_installed = { "clangd", "eslint", "lua_ls", "tsserver", "html", "jsonls", "gopls" },
+--         ensure_installed = { "clangd", "eslint", "lua_ls", "ts_ls", "html", "jsonls", "gopls" },
 --       })
 --     end,
 --   },
