@@ -48,6 +48,7 @@ return {
 				{ name = "luasnip" }, -- snippets
 				{ name = "buffer" }, -- text within current buffer
 				{ name = "path" }, -- file system paths
+				{ name = "codeium", priority = 100 },
 			}),
 
 			-- configure lspkind for vs-code like pictograms in completion menu
@@ -61,7 +62,7 @@ return {
 
 		-- Enable auto-import functionality
 		local capabilities = require("cmp_nvim_lsp").default_capabilities()
-		require("lspconfig")["javascript"].setup({
+		require("lspconfig")["ts_ls"].setup({
 			capabilities = capabilities,
 			on_attach = function(client, bufnr)
 				-- Additional LSP settings can go here

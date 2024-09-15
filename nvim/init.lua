@@ -18,16 +18,16 @@ require("lazy").setup({ { import = "plugins" }, { import = "plugins.lsp" } }, {
 	},
 })
 
--- require("tabnine").setup({
--- 	max_lines = 1000,
--- 	max_filesize = 5000,
--- 	disable_auto_comment = true,
--- 	accept_keymap = "<Tab>",
--- 	dismiss_keymap = "<C-]>",
--- 	debounce_ms = 800,
--- 	suggestion_color = { gui = "#808080", cterm = 244 },
--- 	exclude_filetypes = { "TelescopePrompt", "NvimTree" },
--- 	log_file_path = nil, -- absolute path to Tabnine log file
--- 	ignore_certificate_errors = false,
--- 	max_number_results = 20,
--- })
+require("tabnine").setup({
+	max_lines = 1000,
+	max_filesize = 5000,
+	disable_auto_comment = true,
+	accept_keymap = "<Tab>",
+	dismiss_keymap = "<C-]>",
+	debounce_ms = 800,
+	suggestion_color = { gui = "#F5C2E7", cterm = 13 },
+	exclude_filetypes = { "TelescopePrompt", "NvimTree" },
+	log_file_path = nil, -- absolute path to Tabnine log file
+	ignore_certificate_errors = false,
+	max_number_results = 20,
+})
