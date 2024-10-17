@@ -5,10 +5,8 @@ return {
 			"~/Documents/projects/prakashdahal.github.io/", -- Define your project roots
 			"~/Documents/projects/tailwind-paid-components/",
 			"~/Documents/HDD/myFiles/",
+			"~/Documents/dotfiles/*",
 			"~/Documents/HDD/TechEverest/*",
-			-- "~/Documents/techEverest/Tech/chautauqua-user-fe/",
-			-- "~/Documents/techEverest/Tech/chautauqua-admin-fe/",
-			-- "~/Documents/techEverest/Tech/tech-everest-website/",
 			"~/Documents/techEverest/Tech/*",
 
 			-- "~/.config/*",

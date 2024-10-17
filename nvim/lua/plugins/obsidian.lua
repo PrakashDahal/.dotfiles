@@ -13,19 +13,17 @@ return {
 	dependencies = {
 		-- Required.
 		"nvim-lua/plenary.nvim",
-
-		-- see below for full list of optional dependencies 👇
 	},
 	opts = {
 		workspaces = {
-			{
-				name = "personal",
-				path = "~/Documents/notes/personal",
-			},
-			{
-				name = "business",
-				path = "~/Documents/notes/business",
-			},
+			-- {
+			-- 	name = "personal",
+			-- 	path = "~/Documents/notes/personal",
+			-- },
+			-- {
+			-- 	name = "business",
+			-- 	path = "~/Documents/notes/business",
+			-- },
 			{
 				name = "all",
 				path = "~/Documents/notes",
@@ -38,7 +36,5 @@ return {
 			-- Trigger completion at 2 chars.
 			min_chars = 2,
 		},
-
-		-- see below for full list of options 👇
 	},
 }

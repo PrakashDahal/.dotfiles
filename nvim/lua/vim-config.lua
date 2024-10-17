@@ -1,5 +1,4 @@
 local opt = vim.opt
-local keymap = vim.keymap
 local api = vim.api
 
 opt.number = true
@@ -31,6 +30,7 @@ opt.colorcolumn = "80"
 
 opt.conceallevel = 1
 
+local keymap = vim.keymap
 vim.g.mapleader = " "
 keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = "Execute Explore command. Takes back in repo" })
 

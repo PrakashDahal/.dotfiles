@@ -14,7 +14,7 @@ return {
 		"saadparwaiz1/cmp_luasnip", -- for autocompletion
 		"rafamadriz/friendly-snippets", -- useful snippets
 		"onsails/lspkind.nvim", -- vs-code like pictograms
-		"hrsh7th/cmp-nvim-lsp", -- LSP source for completion
+		-- "hrsh7th/cmp-nvim-lsp", -- LSP source for completion
 	},
 	config = function()
 		local cmp = require("cmp")
@@ -48,7 +48,7 @@ return {
 				{ name = "luasnip" }, -- snippets
 				{ name = "buffer" }, -- text within current buffer
 				{ name = "path" }, -- file system paths
-				{ name = "codeium", priority = 100 },
+				-- { name = "codeium", priority = 100 },
 			}),
 
 			-- configure lspkind for vs-code like pictograms in completion menu
