@@ -32,5 +32,17 @@ return {
 
 		-- Disable folding on alpha buffer
 		vim.cmd([[autocmd FileType alpha setlocal nofoldenable]])
+
+		-- Fix potential redraw issue on resize
+		vim.api.nvim_create_autocmd("VimResized", {
+			pattern = "*",
+			callback = function()
+				if vim.api.nvim_buf_is_valid(1) and vim.bo[1].filetype == "alpha" then
+					alpha.redraw()
+				end
+			end,
+		})
+
+		vim.g.alpha_redraw_on_resize = false
 	end,
 }
