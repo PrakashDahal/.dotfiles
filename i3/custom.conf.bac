@@ -75,6 +75,9 @@ qmode "$mode_system" {
 
 # (restore will remember old selected image and restores it) 
 # Set background using nitrogen 
+exec_always ~/Documents/bashScripts/customBashFiles/transparent.sh &
 exec_always --no-startup-id ~/Documents/bashScripts/customBashFiles/random_wallpaper_nitrogen.sh &
 # exec_always --no-startup-id ~/Documents/bashScripts/customBashFiles/battry_alert.sh
 exec_always ~/.config/polybar/launch.sh &
+
+

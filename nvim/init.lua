@@ -20,6 +20,16 @@ require("lazy").setup({ { import = "plugins" }, { import = "plugins.lsp" } }, {
 	change_detection = {
 		notify = false,
 	},
+	ui = {
+		border = "single",
+		position = "top",
+		size = { width = 0.7, height = 0.7 },
+		open_at_top = false,
+		winblend = 0,
+		highlight = {
+			fg = "#FFFFFF",
+		},
+	},
 })
 
 require("tabnine").setup({
@@ -34,4 +44,16 @@ require("tabnine").setup({
 	log_file_path = nil, -- absolute path to Tabnine log file
 	ignore_certificate_errors = false,
 	max_number_results = 20,
+})
+
+-- Zathura PDF reader
+vim.api.nvim_create_autocmd("BufReadPost", {
+	pattern = { "*.pdf" },
+	callback = function()
+		local pdf_file = vim.fn.expand("%:p")
+		-- Open the PDF with Zathura detached from the terminal
+		vim.fn.jobstart({ "zathura", pdf_file }, { detach = true })
+		-- Close the current buffer
+		vim.cmd("bd!")
+	end,
 })
