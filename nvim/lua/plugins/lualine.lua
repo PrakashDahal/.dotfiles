@@ -15,11 +15,21 @@ return {
 					},
 				},
 			},
-			tabline = {
+			-- Add winbar for each window (split)
+			winbar = {
 				lualine_x = {
 					{
 						"filename",
-						color = { fg = colors.lavender, bg = colors.surface1, gui = "bold" }, -- Top right filename highlight
+						color = { fg = colors.lavender, bg = colors.surface1, gui = "bold" },
+					},
+				},
+			},
+			-- Optional: also show the winbar for inactive windows
+			inactive_winbar = {
+				lualine_x = {
+					{
+						"filename",
+						color = { fg = colors.lavender, bg = colors.surface1, gui = "bold" },
 					},
 				},
 			},
