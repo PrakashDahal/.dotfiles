@@ -75,47 +75,78 @@ return {
 		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
 		for type, icon in pairs(signs) do
 			local hl = "DiagnosticSign" .. type
-			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+			-- vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+			vim.diagnostic.config({
+				signs = {
+					text = {
+						[vim.diagnostic.severity.ERROR] = "",
+						[vim.diagnostic.severity.WARN] = "",
+						[vim.diagnostic.severity.INFO] = "",
+						[vim.diagnostic.severity.HINT] = "",
+					},
+				},
+				severity_sort = true,
+				virtual_text = false,
+				float = {
+					source = "always",
+				},
+			})
 		end
 
-		mason_lspconfig.setup_handlers({
-			-- default handler for installed servers
-			function(server_name)
-				lspconfig[server_name].setup({
-					capabilities = capabilities,
-				})
-			end,
-			["graphql"] = function()
-				-- configure graphql language server
-				lspconfig["graphql"].setup({
-					capabilities = capabilities,
-					filetypes = { "graphql", "gql", "typescriptreact", "javascriptreact" },
-				})
-			end,
-			["emmet_ls"] = function()
-				-- configure emmet language server
-				lspconfig["emmet_ls"].setup({
-					capabilities = capabilities,
-					filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
-				})
-			end,
-			["lua_ls"] = function()
-				-- configure lua server (with special settings)
-				lspconfig["lua_ls"].setup({
-					capabilities = capabilities,
-					settings = {
-						Lua = {
-							-- make the language server recognize "vim" global
-							diagnostics = {
-								globals = { "vim" },
-							},
-							completion = {
-								callSnippet = "Replace",
+		mason_lspconfig.setup({
+			handlers = {
+				-- Default handler for installed servers
+				function(server_name)
+					lspconfig[server_name].setup({
+						capabilities = capabilities,
+					})
+				end,
+
+				["pyright"] = function()
+					lspconfig.pyright.setup({
+						capabilities = capabilities,
+						settings = {
+							python = {
+								analysis = {
+									autoSearchPaths = true,
+									useLibraryCodeForTypes = true,
+									diagnosticMode = "workspace",
+								},
 							},
 						},
-					},
-				})
-			end,
+					})
+				end,
+
+				["graphql"] = function()
+					lspconfig.graphql.setup({
+						capabilities = capabilities,
+						filetypes = { "graphql", "gql", "typescriptreact", "javascriptreact" },
+					})
+				end,
+
+				["emmet_ls"] = function()
+					lspconfig.emmet_ls.setup({
+						capabilities = capabilities,
+						filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
+					})
+				end,
+
+				["lua_ls"] = function()
+					lspconfig.lua_ls.setup({
+						capabilities = capabilities,
+						settings = {
+							Lua = {
+								diagnostics = {
+									globals = { "vim" },
+								},
+								completion = {
+									callSnippet = "Replace",
+								},
+							},
+						},
+					})
+				end,
+			},
 		})
 	end,
 }
