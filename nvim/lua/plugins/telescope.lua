@@ -23,6 +23,22 @@ return {
 					},
 				},
 			},
+			pickers = {
+				live_grep = {
+					-- don't use this. it will only search in the current file
+					-- live_grep_args = { "-F" },
+					vimgrep_arguments = {
+						"rg",
+						"--color=never",
+						"--no-heading",
+						"--with-filename",
+						"--line-number",
+						"--column",
+						"--smart-case",
+						"--fixed-strings", -- Treat the pattern as a literal string
+					},
+				},
+			},
 		})
 
 		telescope.load_extension("fzf")

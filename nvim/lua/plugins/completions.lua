@@ -68,7 +68,8 @@ return {
 				{ name = "luasnip" }, -- snippets
 				{ name = "buffer" }, -- text within current buffer
 				{ name = "path" }, -- file system paths
-				{ name = "codeium", priority = 100 },
+				{ name = "copilot", priority = 100 }, -- GitHub Copilot
+				{ name = "codeium", priority = 100 }, -- Codeium AI completions
 			}),
 
 			-- configure lspkind for vs-code like pictograms in completion menu

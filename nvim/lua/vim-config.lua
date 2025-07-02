@@ -67,3 +67,5 @@ api.nvim_set_keymap("n", "<leader>o", ':execute "normal! o"<CR>k', { noremap = t
 
 -- Add a new line above the current line without entering insert mode
 api.nvim_set_keymap("n", "<leader>O", ':execute "normal! O"<CR>j', { noremap = true, silent = true })
+
+api.nvim_set_keymap("n", "<leader>lz", ":Lazy<cr>", { noremap = true, silent = true })
