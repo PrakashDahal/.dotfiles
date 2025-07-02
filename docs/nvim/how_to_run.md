@@ -1,0 +1,15 @@
+# How to Run Neovim\n\nThis document provides basic instructions on how to run and interact with your Neovim setup.\n\n## Starting Neovim\n\nTo start Neovim, simply open your terminal and type:\n\n```bash\nnvim\n```\n\nIf you want to open a specific file, you can provide the file path as an argument:\n\n```bash\nnvim /path/to/your/file.txt\n```\n\n## Basic Navigation and Commands\n\nNeovim operates in different modes. The most common ones are:\n\n*   **Normal Mode:** This is the default mode when you open Neovim. In this mode, you can navigate, delete, copy, and paste text using various commands. You can always return to Normal mode by pressing `<Esc>`.\n*   **Insert Mode:** In this mode, you can type and insert text. You enter Insert mode by pressing `i` (insert at cursor), `a` (append after cursor), `o` (insert new line below), etc.\n*   **Visual Mode:** This mode allows you to select text. You enter Visual mode by pressing `v` (character-wise), `V` (line-wise), or `<C-v>` (block-wise).\n\nHere are some fundamental commands:\n\n| Command | Description                                     |\n| ------- | ----------------------------------------------- |\n| `h`     | Move cursor left                                |\n| `j`     | Move cursor down                                |\
+| `k`     | Move cursor up                                  |\
+| `l`     | Move cursor right                               |\
+| `i`     | Enter Insert mode (at cursor)                   |\
+| `a`     | Enter Insert mode (append after cursor)         |\
+| `o`     | Enter Insert mode (new line below)              |\
+| `dd`    | Delete current line                             |\
+| `yy`    | Yank (copy) current line                        |\
+| `p`     | Paste after cursor                              |\
+| `:w`    | Save the current file                           |\
+| `:q`    | Quit Neovim (if no unsaved changes)             |\
+| `:wq`   | Save and quit                                   |\
+| `:q!`   | Quit without saving (force quit)                |\
+| `:x`    | Save and quit (only if changes were made)       |\
+\n## Plugin Usage\n\nYour Neovim configuration includes several plugins that enhance its functionality. Refer to `keybindings.md` for a detailed list of keybindings for each plugin.\n\n### Example: Using Telescope (Fuzzy Finder)\n\nTo find files using Telescope, press `<leader>ff` (where `<leader>` is your leader key, set to `<Space>` by default). This will open a fuzzy finder interface where you can type to search for files.\n\n### Example: Using NvimTree (File Explorer)\n\nTo toggle the file explorer, press `<leader>ee`. This will open or close the file tree on the left side of your Neovim window.\n\n## Customization\n\nYour Neovim configuration is located in `~/.config/nvim`. You can customize it by editing the Lua files within this directory. The main configuration is in `init.lua` and `lua/vim-config.lua`, with individual plugin configurations in `lua/plugins/`.\n\nRemember to restart Neovim after making changes to your configuration for them to take effect.\n
