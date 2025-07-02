@@ -132,3 +132,4 @@ source $ZSH/oh-my-zsh.sh
 
 # Load Angular CLI autocompletion.
 source <(ng completion script)
+export GEMINI_API_KEY="AIzaSyA50Bk1oRqnQ51RfnqEfc-BUe7xDjDyOJI"
