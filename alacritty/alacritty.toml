@@ -1,5 +1,5 @@
 [font]
-size = 9 
+size = 10 
 
 [font.bold]
 family = "monospace"
@@ -52,3 +52,9 @@ blue = "#79c0ff"
 magenta = "#bc8cff"
 cyan = "#39c5cf"
 white = "#b1bac4"
+
+[[keyboard.bindings]]
+key = "Semicolon"
+mods = "Control"
+chars = "\u000C"  # This is Ctrl+L (form feed) which clears the screen
+
