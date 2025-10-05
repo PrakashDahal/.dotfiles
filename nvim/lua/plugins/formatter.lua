@@ -5,6 +5,11 @@ return {
 		local conform = require("conform")
 
 		conform.setup({
+			formatters = {
+				stylua = {
+					prepend_args = { "--indent-type", "Tabs", "--indent-width", "2" },
+				},
+			},
 			formatters_by_ft = {
 				javascript = { "prettier" },
 				typescript = { "prettier" },
