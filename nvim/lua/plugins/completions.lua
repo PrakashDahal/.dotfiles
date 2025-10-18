@@ -68,7 +68,6 @@ return {
 				{ name = "luasnip" }, -- snippets
 				{ name = "buffer" }, -- text within current buffer
 				{ name = "path" }, -- file system paths
-				{ name = "copilot", priority = 100 }, -- GitHub Copilot
 				{ name = "codeium", priority = 100 }, -- Codeium AI completions
 			}),
 
@@ -82,15 +81,6 @@ return {
 			experimental = {
 				ghost_text = true,
 			},
-		})
-
-		-- Enable auto-import functionality
-		local capabilities = require("cmp_nvim_lsp").default_capabilities()
-		require("lspconfig")["ts_ls"].setup({
-			capabilities = capabilities,
-			on_attach = function(client, bufnr)
-				-- Additional LSP settings can go here
-			end,
 		})
 	end,
 }

@@ -1,98 +1,63 @@
--- return {
--- 	{
--- 		"Exafunction/codeium.nvim",
--- 		dependencies = {
--- 			"nvim-lua/plenary.nvim",
--- 			"hrsh7th/nvim-cmp",
--- 		},
--- 		event = "InsertEnter", -- Load Codeium when entering insert mode
--- 		config = function()
--- 			require("lua.plugins.ai").setup({
--- 				enable_cmp_source = true,
--- 				virtual_text = {
--- 					enable = true,
--- 				},
--- 				-- Optional: Customize Codeium settings here
--- 				-- workspace_root = {
--- 				--   use_lsp = true,
--- 				--   paths = { ".git", "package.json" },
--- 				-- },
--- 			})
--- 		end,
--- 	},
--- }
-
 return {
-	-- GitHub Copilot
+	-- Niceties
+	{ "nvim-lua/plenary.nvim" },
+	{ "MunifTanjim/nui.nvim" },
+	{ "stevearc/dressing.nvim", opts = {} },
+
+	-- Primary chat/edit: CodeCompanion (OpenAI + Gemini via adapters.http)
 	{
-		"github/copilot.vim",
-		event = "InsertEnter",
-		config = function()
-			-- Enable Copilot by default
-			vim.g.copilot_enabled = 1
-			vim.g.copilot_filetypes = {
-				["*"] = true,
-				["markdown"] = true,
-				["yaml"] = true,
-			}
+		"olimorris/codecompanion.nvim",
+		cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionActions", "CodeCompanionToggle" },
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"MunifTanjim/nui.nvim",
+			"stevearc/dressing.nvim",
+		},
+		opts = function()
+			-- Get config from our central ai module
+			local ai_config = require("ai")
+			return ai_config.get_codecompanion_config()
 		end,
 	},
 
+	-- Fallback inline completion + chat: Codeium (free tier)
 	{
-		"CopilotC-Nvim/CopilotChat.nvim",
-		dependencies = {
-			{ "github/copilot.vim" },
-			{ "nvim-lua/plenary.nvim", branch = "master" },
-		},
-		build = "make tiktoken",
-		opts = {
-			window = {
-				layout = "buffer",
-				relative = "editor",
-				width = 0.8,
-				height = 0.8,
-				row = 0.1,
-				col = 0.1,
-			},
-			mappings = {
-				close = { normal = "q", insert = "<C-c>" },
-				reset = { normal = "<C-r>", insert = "<C-r>" },
-				submit_prompt = { normal = "<CR>", insert = "<C-s>" },
-			},
-		},
-	},
-
-	-- Codeium
-	{
-		"Exafunction/codeium.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"hrsh7th/nvim-cmp",
-		},
+		"jcdickinson/codeium.nvim",
 		event = "InsertEnter",
+		dependencies = { "nvim-lua/plenary.nvim" },
 		config = function()
 			require("codeium").setup({
-				enable_cmp_source = false, -- Disabled by default
-				virtual_text = {
-					enable = false,
-				},
+				enable = true, -- keep inline suggestions on by default
+				enable_cmp_source = false, -- if you use cmp source, set true
+				virtual_text = { enable = true },
 			})
 		end,
 	},
 
-	-- Toggle Keybindings
+	-- Optional: markdown ergonomics (SRS in .md)
+	{ "MeanderingProgrammer/render-markdown.nvim", opts = {} }, -- live MD render in the buffer
+	{ "preservim/vim-markdown", ft = { "markdown" } },
+	{ "dhruvasagar/vim-table-mode", ft = { "markdown" } },
+	{ "numToStr/Comment.nvim", opts = {} }, -- better comments
+	{ "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+
+	-- Bindings to our controller (see next section)
 	{
-		"nvim-lua/plenary.nvim", -- Ensure plenary is available
+		"nvim-lua/plenary.nvim",
 		config = function()
 			local ai = require("ai")
-			-- Toggle between Copilot and Codeium
-			vim.keymap.set("n", "<Leader>ai", ai.toggle_ai, { desc = "Toggle Copilot/Codeium" })
-			-- Open chat for active AI
-			vim.keymap.set("n", "<Leader>cc", ai.open_chat, { desc = "Open AI Chat" })
+			-- Chat / Edit
+			vim.keymap.set("n", "<leader>cc", ai.chat_openai, { desc = "AI Chat (OpenAI, right)" })
+			vim.keymap.set("n", "<leader>cg", ai.chat_gemini, { desc = "AI Chat (Gemini, left)" })
+			vim.keymap.set({ "n", "v" }, "<leader>ce", ai.edit, { desc = "AI Edit/Actions (CodeCompanion)" })
 
-			vim.keymap.set("n", "<Leader>as", function()
-				vim.notify("Active AI: " .. ai.active_ai, vim.log.levels.INFO)
-			end, { desc = "Check Active AI" })
+			-- Model swap (OpenAI <-> Gemini) within CodeCompanion
+
+			-- Inline suggestions on/off (Codeium)
+			vim.keymap.set("n", "<leader>ci", ai.toggle_codeium, { desc = "Toggle Codeium Inline" })
+
+			-- Status ping
+			vim.keymap.set("n", "<leader>as", ai.status, { desc = "AI Status" })
 		end,
 	},
 }

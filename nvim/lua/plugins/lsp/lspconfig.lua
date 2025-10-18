@@ -7,8 +7,7 @@ return {
 		{ "folke/neodev.nvim", opts = {} },
 	},
 	config = function()
-		-- import lspconfig plugin
-		local lspconfig = require("lspconfig")
+		
 
 		-- import mason_lspconfig plugin
 		local mason_lspconfig = require("mason-lspconfig")
@@ -97,13 +96,14 @@ return {
 			handlers = {
 				-- Default handler for installed servers
 				function(server_name)
-					lspconfig[server_name].setup({
+					vim.lsp.config(server_name, {
 						capabilities = capabilities,
 					})
+					vim.lsp.enable(server_name)
 				end,
 
 				["pyright"] = function()
-					lspconfig.pyright.setup({
+					vim.lsp.config("pyright", {
 						capabilities = capabilities,
 						settings = {
 							python = {
@@ -115,24 +115,34 @@ return {
 							},
 						},
 					})
+					vim.lsp.enable("pyright")
 				end,
 
 				["graphql"] = function()
-					lspconfig.graphql.setup({
+					vim.lsp.config("graphql", {
 						capabilities = capabilities,
 						filetypes = { "graphql", "gql", "typescriptreact", "javascriptreact" },
 					})
+					vim.lsp.enable("graphql")
 				end,
 
 				["emmet_ls"] = function()
-					lspconfig.emmet_ls.setup({
+					vim.lsp.config("emmet_ls", {
 						capabilities = capabilities,
 						filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
 					})
+					vim.lsp.enable("emmet_ls")
+				end,
+
+				["pylsp"] = function()
+					vim.lsp.config("pylsp", {
+						capabilities = capabilities,
+					})
+					vim.lsp.enable("pylsp")
 				end,
 
 				["lua_ls"] = function()
-					lspconfig.lua_ls.setup({
+					vim.lsp.config("lua_ls", {
 						capabilities = capabilities,
 						settings = {
 							Lua = {
@@ -145,6 +155,7 @@ return {
 							},
 						},
 					})
+					vim.lsp.enable("lua_ls")
 				end,
 			},
 		})
