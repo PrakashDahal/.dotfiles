@@ -11,7 +11,7 @@ local M = {}
 -- Default configuration values.
 -- These can be overridden by the user if needed.
 M.defaults = {
-	openai_model = "gpt-5-mini",
+	openai_model = "gpt-4o-mini",
 	local_model = "deepseek-coder:1.3b",
 	openai_stream = false, -- Set to false to disable streaming for OpenAI
 }
@@ -91,3 +91,4 @@ function M.chat()
 end
 
 return M
+

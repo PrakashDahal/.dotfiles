@@ -13,31 +13,26 @@ local M = {}
 function M.get_ollama_models()
 	local models = {}
 	-- Use pcall for robust error handling in case `ollama` is not installed
-	local ok, result = pcall(vim.fn.system, "ollama list --format json")
+	local ok, result = pcall(vim.fn.system, "ollama list | awk 'NR>1 {print $1}'")
 
 	if not ok or result == "" then
 		vim.notify("Failed to run 'ollama list'. Is it installed and in your PATH?", vim.log.levels.WARN)
 		return {}
 	end
 
-	local json_ok, parsed = pcall(vim.json.decode, result)
-	if not json_ok or not parsed or not parsed.models then
-		-- This can happen if the command runs but returns an error message instead of JSON
-		-- No notification here as the previous one is likely sufficient
-		return {}
-	end
-
-	local model_names = {}
-	for _, item in ipairs(parsed.models) do
-		-- Strip tags like ":latest" for a cleaner name
-		local short_name = item.name:match("([^:]+)")
-		if short_name then
-			model_names[short_name] = true
-		end
-	end
-	for name in pairs(model_names) do
-		table.insert(models, name)
-	end
+    local lines = vim.split(result, "\n")
+    local model_names = {}
+    for _, line in ipairs(lines) do
+        if line ~= "" then
+    		local short_name = line:match("([^\t]+)")
+    		if short_name then
+    			model_names[short_name] = true
+    		end
+        end
+    end
+    for name in pairs(model_names) do
+        table.insert(models, name)
+    end
 	table.sort(models)
 
 	return models
@@ -107,5 +102,4 @@ function M.pick_model(callback)
 		end
 	end)
 end
-
 return M
