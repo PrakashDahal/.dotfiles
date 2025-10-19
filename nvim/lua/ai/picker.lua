@@ -90,7 +90,14 @@ function M.pick_model(callback)
 				ai.state.model = selection.model
 
 				-- Re-setup CodeCompanion immediately to apply the change
-				require("codecompanion").setup(ai.setup_codecompanion())
+				local success, err = pcall(function()
+					require("codecompanion").setup(ai.setup_codecompanion())
+				end)
+
+				if not success then
+					vim.notify("Error setting up CodeCompanion: " .. err, vim.log.levels.ERROR)
+					return
+				end
 
 				vim.notify(string.format("AI model set to: %s • %s", ai.state.adapter, ai.state.model))
 
@@ -102,4 +109,5 @@ function M.pick_model(callback)
 		end
 	end)
 end
+
 return M
