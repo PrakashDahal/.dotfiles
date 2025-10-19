@@ -52,8 +52,14 @@ end
 -- @return table The CodeCompanion configuration table.
 function M.setup_codecompanion(position)
 	position = position or "right" -- Default to "right" if not provided
-	-- Set up adapters based on current state
-	M.adapters.setup_adapters(M.state.model, M.state.model)
+	-- Determine which model should be applied to each adapter.
+	-- If the user has selected a model for the active adapter, use that;
+	-- otherwise fall back to the configured defaults.
+	local openai_model = (M.state.adapter == "openai") and M.state.model or M.defaults.openai_model
+	local local_model = (M.state.adapter == "local") and M.state.model or M.defaults.local_model
+
+	-- Set up adapters based on the resolved models
+	M.adapters.setup_adapters(openai_model, local_model)
 
 	local title = string.format("— %s — %s", string.upper(M.state.adapter), M.state.model)
 

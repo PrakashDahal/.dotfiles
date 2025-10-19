@@ -36,9 +36,10 @@ end
 -- @return table The CodeCompanion adapter definition.
 function M.get_local_adapter(model)
 	return cc_adapters.extend("openai", { -- Use "openai" base for compatibility
-		env = {
-			api_key = false, -- Set api_key to false
-		},
+		-- Ollama/local provider does not require an API key in the same way;
+		-- provide an empty env table instead of a boolean to avoid adapter utils
+		-- attempting to index a non-table value.
+		env = {},
 		schema = {
 			model = { default = "ollama/" .. model },
 		},
