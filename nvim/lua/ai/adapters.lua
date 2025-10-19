@@ -37,13 +37,14 @@ end
 function M.get_local_adapter(model)
 	return cc_adapters.extend("openai", { -- Use "openai" base for compatibility
 		env = {
-			api_key = "OLLAMA_DUMMY_KEY", -- Dummy key, as Ollama doesn't require one
-			base = "OLLAMA_BASE", -- Env var for the base URL (e.g., http://localhost:11434)
+			api_key = false, -- Set api_key to false
 		},
 		schema = {
-			model = { default = model },
+			model = { default = "ollama/" .. model },
 		},
 		opts = {
+			api_base = os.getenv("OLLAMA_BASE") or "http://localhost:11434",
+			provider = "ollama",
 			stream = true,
 			endpoint = "/v1/chat/completions",
 		},
