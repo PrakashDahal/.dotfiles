@@ -95,8 +95,23 @@ function M.pick_model(callback)
 				end)
 
 				if not success then
-					vim.notify("Error setting up CodeCompanion: " .. err, vim.log.levels.ERROR)
-					return
+					local errmsg = tostring(err)
+					-- If the failure indicates an invalid model ID from OpenAI's API,
+					-- attempt a safe fallback to a commonly-available model and retry once.
+					if errmsg:lower():match("invalid model") or errmsg:lower():match("invalid model id") then
+						vim.notify("CodeCompanion: invalid model detected. Falling back to gpt-3.5-turbo and retrying.", vim.log.levels.WARN)
+						ai.defaults.openai_model = "gpt-3.5-turbo"
+						local ok2, err2 = pcall(function()
+							require("codecompanion").setup(ai.setup_codecompanion())
+						end)
+						if not ok2 then
+							vim.notify("Retry failed: " .. tostring(err2), vim.log.levels.ERROR)
+							return
+						end
+					else
+						vim.notify("Error setting up CodeCompanion: " .. errmsg, vim.log.levels.ERROR)
+						return
+					end
 				end
 
 				vim.notify(string.format("AI model set to: %s • %s", ai.state.adapter, ai.state.model))
