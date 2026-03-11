@@ -26,14 +26,14 @@ client.background       #e0f0e0
 # The default application will open in specified workspace
 
 # Workspace Management
-# assign [class="Alacritty"] $ws1  
+# assign [class="Kitty"] $ws1  
 assign [class="Brave-browser"] $ws2 
 assign [class="code"] $ws10
 assign [class="TelegramDesktop"] $ws9
 assign [class="^Microsoft Teams"] $ws9
 
 # Open default application required
-exec --no-startup-id alacritty & 
+exec --no-startup-id kitty & 
 exec --no-startup-id brave &
 exec --no-startup-id telegram-desktop &
 exec --no-startup-id "microsoft teams - preview" &
@@ -59,7 +59,7 @@ mode "$mode_browser" {
 }
 
 # Kill all applications on
-bindsym $mod+shift+q [class="^(?i)(?!alacritty).*"] kill
+bindsym $mod+shift+q [class="^(?i)(?!kitty).*"] kill
 
 # Power management
 bindsym $mod+p mode "$mode_system"
