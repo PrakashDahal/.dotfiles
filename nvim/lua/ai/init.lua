@@ -13,8 +13,8 @@ local M = {}
 M.defaults = {
 	-- Use a broadly available OpenAI model by default to avoid "invalid model ID"
 	-- errors for users who don't have early-access or unreleased models.
-	openai_model = "gpt-3.5-turbo",
-	local_model = "deepseek-coder:1.3b",
+	openai_model = "gpt-5-nano",
+	-- local_model = "deepseek-coder:1.3b",
 	openai_stream = false, -- Set to false to disable streaming for OpenAI
 }
 

@@ -20,19 +20,19 @@ function M.get_ollama_models()
 		return {}
 	end
 
-    local lines = vim.split(result, "\n")
-    local model_names = {}
-    for _, line in ipairs(lines) do
-        if line ~= "" then
-    		local short_name = line:match("([^\t]+)")
-    		if short_name then
-    			model_names[short_name] = true
-    		end
-        end
-    end
-    for name in pairs(model_names) do
-        table.insert(models, name)
-    end
+	local lines = vim.split(result, "\n")
+	local model_names = {}
+	for _, line in ipairs(lines) do
+		if line ~= "" then
+			local short_name = line:match("([^\t]+)")
+			if short_name then
+				model_names[short_name] = true
+			end
+		end
+	end
+	for name in pairs(model_names) do
+		table.insert(models, name)
+	end
 	table.sort(models)
 
 	return models
@@ -99,8 +99,8 @@ function M.pick_model(callback)
 					-- If the failure indicates an invalid model ID from OpenAI's API,
 					-- attempt a safe fallback to a commonly-available model and retry once.
 					if errmsg:lower():match("invalid model") or errmsg:lower():match("invalid model id") then
-						vim.notify("CodeCompanion: invalid model detected. Falling back to gpt-3.5-turbo and retrying.", vim.log.levels.WARN)
-						ai.defaults.openai_model = "gpt-3.5-turbo"
+						vim.notify("CodeCompanion: invalid model detected. Falling back to gpt and retrying.", vim.log.levels.WARN)
+						ai.defaults.openai_model = "gpt-5-nano"
 						local ok2, err2 = pcall(function()
 							require("codecompanion").setup(ai.setup_codecompanion())
 						end)
