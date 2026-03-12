@@ -1,101 +1,146 @@
 -- lua/ai/init.lua
----@diagnostic disable: E5108
 --
--- Main AI module for state management and setup.
--- This module initializes the AI state, provides default configurations,
--- and glues together the other modules (adapters, picker, terminals, keymaps).
--- It exposes the public API for interacting with the AI features.
+-- Main AI module. Avante replaces CodeCompanion.
+--
+-- Responsibilities:
+--   - Holds global state: active provider + model
+--   - Builds avante config using the NEW providers.* structure
+--   - Exposes setup(), reconfigure() for model switching
+--   - Wires together: context, keymaps sub-modules
 
 local M = {}
 
--- Default configuration values.
--- These can be overridden by the user if needed.
-M.defaults = {
-	-- Use a broadly available OpenAI model by default to avoid "invalid model ID"
-	-- errors for users who don't have early-access or unreleased models.
-	openai_model = "gpt-5-nano",
-	-- local_model = "deepseek-coder:1.3b",
-	openai_stream = false, -- Set to false to disable streaming for OpenAI
+-- ── Curated model menu ────────────────────────────────────────────────────────
+-- Edit this table to add/remove models.
+-- Format: display_label = { provider = "...", model = "..." }
+M.model_menu = {
+	["GPT-4o                 (OpenAI • Best)"] = { provider = "openai", model = "gpt-4o" },
+	["GPT-4o-mini            (OpenAI • Fast)"] = { provider = "openai", model = "gpt-4o-mini" },
+	["Claude Sonnet 4.5      (Anthropic • Reasoning)"] = { provider = "claude", model = "claude-sonnet-4-5-20251001" },
+	["Claude Haiku 4.5       (Anthropic • Fast)"] = { provider = "claude", model = "claude-haiku-4-5-20251001" },
+	["Deepseek Coder 6.7b    (Local • Coding)"] = { provider = "ollama", model = "deepseek-coder:6.7b" },
+	["Llama 3.2 3b           (Local • Fast Chat)"] = { provider = "ollama", model = "llama3.2:3b" },
 }
 
--- Global state for the AI module.
--- This table holds the currently active adapter and model.
--- It is updated by the model picker.
+-- ── Global state ──────────────────────────────────────────────────────────────
 M.state = {
-	adapter = "openai", -- "openai" or "local"
-	model = M.defaults.openai_model,
+	provider = "openai",
+	model = "gpt-4o",
 }
 
--- Forward-declare modules that will be loaded later.
-M.adapters = require("ai.adapters")
-M.picker = require("ai.picker")
-M.terminals = require("ai.terminals")
+-- ── Sub-modules ───────────────────────────────────────────────────────────────
+M.context = require("ai.context")
 M.keymaps = require("ai.keymaps")
 
---- Docks the CodeCompanion chat window to a specified side.
--- @param side string "left" or "right"
-local function _dock_chat(side)
-	vim.schedule(function()
-		for _, win in ipairs(vim.api.nvim_list_wins()) do
-			local buf = vim.api.nvim_win_get_buf(win)
-			if vim.bo[buf].filetype == "codecompanion" then
-				vim.api.nvim_set_current_win(win)
-				vim.cmd(side == "right" and "wincmd L" or "wincmd H")
-				break
-			end
-		end
-	end)
-end
-
---- Generates the configuration table for CodeCompanion.
--- This function builds the dynamic configuration based on the current `M.state`.
--- It sets up the correct adapter, model, and view options.
--- @param position string The position for the chat window (e.g., "right").
--- @return table The CodeCompanion configuration table.
-function M.setup_codecompanion(position)
-	position = position or "right" -- Default to "right" if not provided
-	-- Determine which model should be applied to each adapter.
-	-- If the user has selected a model for the active adapter, use that;
-	-- otherwise fall back to the configured defaults.
-	local openai_model = (M.state.adapter == "openai") and M.state.model or M.defaults.openai_model
-	local local_model = (M.state.adapter == "local") and M.state.model or M.defaults.local_model
-
-	-- Set up adapters based on the resolved models
-	M.adapters.setup_adapters(openai_model, local_model)
-
-	local title = string.format("— %s — %s", string.upper(M.state.adapter), M.state.model)
+-- ── Build avante config from current M.state ─────────────────────────────────
+--
+-- Uses the NEW avante providers.* structure (post-migration).
+-- All providers go under `providers`, all request body fields
+-- (temperature, max_tokens) go under `providers.<n>.extra_request_body`.
+function M.build_avante_config()
+	local state = M.state
 
 	return {
-		-- Use the active adapter for both chat and inline strategies
-		strategies = {
-			chat = { adapter = M.state.adapter },
-			inline = { adapter = M.state.adapter, enabled = true },
-		},
-		-- Provide the adapter definitions
-		adapters = M.adapters.get_all_adapters(),
-		-- Override keymaps and view options
-		strategies_overrides = {
-			chat = {
-				keymaps = {
-					send = { modes = { n = "<CR>", i = "<CR>" } },
-					new_line = { modes = { i = "<S-CR>" } },
-					close = { modes = { n = "q", i = "<C-c>" } },
-				},
-				view = {
-					title = title,
-					position = position,
+		-- ── Active provider ────────────────────────────────────────────────────
+		provider = state.provider,
+
+		-- ── All providers under providers.* (new structure) ───────────────────
+		providers = {
+
+			openai = {
+				endpoint = "https://api.openai.com/v1",
+				model = (state.provider == "openai") and state.model or "gpt-4o",
+				timeout = 30000,
+				extra_request_body = {
+					temperature = 0,
+					max_tokens = 4096,
 				},
 			},
+
+			claude = {
+				endpoint = "https://api.anthropic.com",
+				model = (state.provider == "claude") and state.model or "claude-sonnet-4-5-20251001",
+				timeout = 30000,
+				extra_request_body = {
+					temperature = 0,
+					max_tokens = 4096,
+				},
+			},
+
+			-- Ollama runs locally — no API key needed.
+			-- api_key_name points to a dummy env var; avante requires the field
+			-- but ollama itself ignores it.
+			ollama = {
+				__inherited_from = "openai",
+				endpoint = "http://127.0.0.1:11434/v1",
+				model = (state.provider == "ollama") and state.model or "deepseek-coder:6.7b",
+				timeout = 60000,
+				api_key_name = "OLLAMA_API_KEY",
+				extra_request_body = {
+					temperature = 0,
+					max_tokens = 2048,
+				},
+			},
+		},
+
+		-- ── Behaviour ──────────────────────────────────────────────────────────
+		behaviour = {
+			auto_suggestions = false,
+			auto_set_highlight_group = true,
+			auto_set_keymaps = true,
+			auto_apply_diff_after_generation = true,
+			support_paste_from_clipboard = true,
+			minimize_diff = true,
+		},
+
+		-- ── Sidebar window ─────────────────────────────────────────────────────
+		windows = {
+			position = "right",
+			wrap = true,
+			width = 38,
+			sidebar_header = {
+				enabled = true,
+				align = "center",
+				rounded = true,
+			},
+			input = {
+				prefix = "> ",
+			},
+			edit = {
+				border = "rounded",
+				start_insert = true,
+			},
+			ask = {
+				floating = false,
+				start_insert = true,
+				border = "rounded",
+				focus_on_apply = "theirs",
+			},
+		},
+
+		-- ── Diff view ──────────────────────────────────────────────────────────
+		diff = {
+			autojump = true,
+			list_opener = "copen",
+			override_timeoutlen = 500,
 		},
 	}
 end
 
---- Opens the CodeCompanion chat window.
--- It configures CodeCompanion with the current state and docks the window.
-function M.chat()
-	require("codecompanion").setup(M.setup_codecompanion("left"))
-	vim.cmd("CodeCompanionChat")
-	_dock_chat("left")
+-- ── Setup (called once from plugins/ai.lua) ───────────────────────────────────
+function M.setup()
+	require("avante").setup(M.build_avante_config())
+	M.keymaps.setup()
+end
+
+-- ── Reconfigure avante at runtime (called after model switch) ─────────────────
+function M.reconfigure()
+	local ok, err = pcall(function()
+		require("avante").setup(M.build_avante_config())
+	end)
+	if not ok then
+		vim.notify("Failed to switch model: " .. tostring(err), vim.log.levels.ERROR, { title = "AI" })
+	end
 end
 
 return M
