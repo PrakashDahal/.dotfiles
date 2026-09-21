@@ -5,13 +5,14 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 		"clone",
 		"--filter=blob:none",
 		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable", -- latest stable release
+		"--branch=stable",
 		lazypath,
 	})
 end
 vim.opt.rtp:prepend(lazypath)
 
 require("vim-config")
+
 require("lazy").setup({ { import = "plugins" }, { import = "plugins.lsp" } }, {
 	checker = {
 		enabled = true,
@@ -31,6 +32,23 @@ require("lazy").setup({ { import = "plugins" }, { import = "plugins.lsp" } }, {
 		},
 	},
 })
+
+local ok_ts, ts = pcall(require, "vim.treesitter")
+if ok_ts and ts then
+  local orig_get_range = ts.get_range
+  ts.get_range = function(node, source, metadata)
+    if node == nil then return { 0, 0, 0, 0 } end
+    local ok, result = pcall(orig_get_range, node, source, metadata)
+    return ok and result or { 0, 0, 0, 0 }
+  end
+
+  local orig_get_node_text = ts.get_node_text
+  ts.get_node_text = function(node, source, opts)
+    if node == nil then return "" end
+    local ok, result = pcall(orig_get_node_text, node, source, opts)
+    return ok and result or ""
+  end
+end
 
 -- require("tabnine").setup({
 -- 	max_lines = 1000,

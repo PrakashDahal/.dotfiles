@@ -35,9 +35,37 @@ return {
   -- ── Markdown rendering (avante chat + obsidian) ───────────────────────────
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    ft = { "markdown", "Avante" },  -- load for both markdown files and avante
+    ft = { "markdown", "Avante" },
+    event = "BufReadPost",
     opts = {
       file_types = { "markdown", "Avante" },
+      headings = {
+        icon = "󰎕 ",
+        icons = { "󰎕 ", "󰎖 ", "󰎗 ", "󰎘 ", "󰎙 ", "󰎚 " },
+      },
+      dash = {
+        leading_symbol = "—",
+        highlight = "RenderMarkdownDash",
+      },
+      bullet = {
+        icons = { "●", "○", "◐", "◉" },
+      },
+      code = {
+        width = "full",
+        highlight = "RenderMarkdownCode",
+        text = "IndentBlanklineChar",
+      },
+      indent = {
+        skip = "comments",
+      },
+      render = {
+        virtual_lines = "current",
+        width = "block",
+        padding = { left = 1, right = 1 },
+      },
+      treesitter = {
+        language = "markdown",
+      },
     },
   },
 

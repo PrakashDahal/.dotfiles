@@ -5,11 +5,14 @@ return {
 	priority = 1000,
 	config = function()
 		require("catppuccin").setup({
-			flavour = "mocha", -- Set the flavor to mocha
-			background = { -- :h background
+			flavour = "mocha",
+			background = {
 				dark = "mocha",
 			},
 			transparent_background = true,
+			integrations = {
+				lualine = true,
+			},
 		})
 		vim.cmd.colorscheme("catppuccin")
 	end,

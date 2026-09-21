@@ -14,18 +14,34 @@ local M = {}
 -- Edit this table to add/remove models.
 -- Format: display_label = { provider = "...", model = "..." }
 M.model_menu = {
-	["GPT-4o                 (OpenAI • Best)"] = { provider = "openai", model = "gpt-4o" },
-	["GPT-4o-mini            (OpenAI • Fast)"] = { provider = "openai", model = "gpt-4o-mini" },
-	["Claude Sonnet 4.5      (Anthropic • Reasoning)"] = { provider = "claude", model = "claude-sonnet-4-5-20251001" },
+	["GPT-4.1                 (OpenAI • Best)"] = { provider = "openai", model = "gpt-4.1" },
+	["GPT-5-mini            (OpenAI • Fast)"] = { provider = "openai", model = "gpt-5-mini" },
+	["GPT-5-nano            (OpenAI • SuperFast)"] = { provider = "openai", model = "gpt-5-nano" },
+
+	["Gemma 2b               (Local • Fast Small Model)"] = { provider = "ollama", model = "gemma:2b" },
+	["Deepseek Coder 1.3b    (Local • Coding)"] = { provider = "ollama", model = "deepseek-coder:1.3b" },
+
+	["Qwen3 Coder 480B    (OpenRouter • Free)"] = { provider = "openrouter", model = "qwen/qwen3-coder-480b-a35b:free" },
+	["DeepSeek R1         (OpenRouter • Free)"] = { provider = "openrouter", model = "deepseek/deepseek-r1:free" },
+	["Llama 3.3 70B       (OpenRouter • Free)"] = {
+		provider = "openrouter",
+		model = "meta-llama/llama-3.3-70b-instruct:free",
+	},
+	["Auto (Best Free)    (OpenRouter • Free)"] = { provider = "openrouter", model = "openrouter/auto" },
+
+	-- ["Llama 3.3 70b          (Groq • Free + Fast)"] = { provider = "groq", model = "llama-3.3-70b-versatile" },
+	-- ["Mixtral 8x7b           (Groq • Free)"] = { provider = "groq", model = "mixtral-8x7b-32768" },
+	["Gemini 2.5 Flash    (Google • Free)"] = { provider = "gemini", model = "gemini-2.5-flash" },
+	["Gemini 2.5 Pro      (Google • Free)"] = { provider = "gemini", model = "gemini-2.5-pro" },
+
 	["Claude Haiku 4.5       (Anthropic • Fast)"] = { provider = "claude", model = "claude-haiku-4-5-20251001" },
-	["Deepseek Coder 6.7b    (Local • Coding)"] = { provider = "ollama", model = "deepseek-coder:6.7b" },
-	["Llama 3.2 3b           (Local • Fast Chat)"] = { provider = "ollama", model = "llama3.2:3b" },
+	["Claude Sonnet 4.5      (Anthropic • Reasoning)"] = { provider = "claude", model = "claude-sonnet-4-5-20251001" },
 }
 
 -- ── Global state ──────────────────────────────────────────────────────────────
 M.state = {
 	provider = "openai",
-	model = "gpt-4o",
+	model = "gpt-5-nano",
 }
 
 -- ── Sub-modules ───────────────────────────────────────────────────────────────
@@ -64,6 +80,42 @@ function M.build_avante_config()
 				extra_request_body = {
 					temperature = 0,
 					max_tokens = 4096,
+				},
+			},
+
+			openrouter = {
+				__inherited_from = "openai",
+				endpoint = "https://openrouter.ai/api/v1",
+				model = (state.provider == "openrouter") and state.model or "qwen/qwen3-coder-480b-a35b:free",
+				timeout = 60000,
+				api_key_name = "OPENROUTER_API_KEY",
+				extra_request_body = {
+					temperature = 0,
+					max_tokens = 4096,
+				},
+			},
+
+			groq = {
+				__inherited_from = "openai",
+				endpoint = "https://api.groq.com/openai/v1",
+				model = (state.provider == "groq") and state.model or "llama-3.3-70b-versatile",
+				timeout = 30000,
+				api_key_name = "GROQ_API_KEY",
+				extra_request_body = {
+					temperature = 0,
+					max_tokens = 32768,
+				},
+			},
+
+			gemini = {
+				__inherited_from = "openai",
+				endpoint = "https://generativelanguage.googleapis.com/v1beta/openai/",
+				model = (state.provider == "gemini") and state.model or "gemini-2.5-flash",
+				timeout = 60000,
+				api_key_name = "GEMINI_API_KEY",
+				extra_request_body = {
+					temperature = 0,
+					max_tokens = 8192,
 				},
 			},
 

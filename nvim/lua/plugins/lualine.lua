@@ -1,7 +1,8 @@
 return {
 	"nvim-lualine/lualine.nvim",
+	event = "VeryLazy",
 	config = function()
-		local colors = require("catppuccin.palettes").get_palette() -- Get Catppuccin colors
+		local colors = require("catppuccin.palettes").get_palette()
 		require("lualine").setup({
 			options = {
 				theme = "catppuccin",
@@ -11,25 +12,29 @@ return {
 				lualine_c = {
 					{
 						"filename",
-						color = { fg = colors.mauve, bg = colors.surface1, gui = "bold" }, -- Highlight filename
+						fg = colors.mauve,
+						bg = colors.surface1,
+						bold = true,
 					},
 				},
 			},
-			-- Add winbar for each window (split)
 			winbar = {
-				lualine_x = {
+				lualine_c = {
 					{
 						"filename",
-						color = { fg = colors.lavender, bg = colors.surface1, gui = "bold" },
+						fg = colors.lavender,
+						bg = colors.surface1,
+						bold = true,
 					},
 				},
 			},
-			-- Optional: also show the winbar for inactive windows
 			inactive_winbar = {
-				lualine_x = {
+				lualine_c = {
 					{
 						"filename",
-						color = { fg = colors.lavender, bg = colors.surface1, gui = "bold" },
+						fg = colors.lavender,
+						bg = colors.surface1,
+						bold = true,
 					},
 				},
 			},

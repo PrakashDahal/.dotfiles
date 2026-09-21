@@ -1,11 +1,12 @@
 #!/bin/bash
 
-# Get battery percentage (assuming BAT0)
-battery_level=$(cat /sys/class/power_supply/BAT0/capacity)
-status=$(cat /sys/class/power_supply/BAT0/status)
+battery_path="/sys/class/power_supply/BAT0"
+[ -d "$battery_path" ] || exit 0
 
-# Send notification if battery is below 20% and discharging
-if [ "$battery_level" -ge 20 ] && [ "$status" = "Discharging" ]; then
+battery_level=$(cat "$battery_path/capacity" 2>/dev/null) || exit 0
+status=$(cat "$battery_path/status" 2>/dev/null)
+
+if [ "$battery_level" -le 20 ] && [ "$status" = "Discharging" ]; then
     notify-send -u critical "Battery Low" "Battery level is at ${battery_level}%"
 fi
 

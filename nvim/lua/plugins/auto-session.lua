@@ -6,6 +6,8 @@ return {
 		auto_session.setup({
 			auto_restore_enabled = false,
 			auto_session_suppress_dirs = { "~/", "~/Dev/", "~/Downloads", "~/Documents", "~/Desktop/" },
+			silent_restore = true,
+			log_level = "error",
 		})
 
 		local keymap = vim.keymap
