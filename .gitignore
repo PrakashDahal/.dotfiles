@@ -1,3 +1,4 @@
 codeium_config.json
 .zshrc
 .aider*
+__pycache__/
